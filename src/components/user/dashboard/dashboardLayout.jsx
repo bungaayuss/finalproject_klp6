@@ -1,8 +1,6 @@
 import { Outlet, useLocation, useNavigate, Navigate } from "react-router-dom";
 import "../../../styles/Dashboard.css";
 
-// Komponen halaman
-
 // Icon SVG
 const CloudIcon = () => (
   <svg
