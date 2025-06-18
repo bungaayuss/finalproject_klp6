@@ -9,16 +9,22 @@ export default function Header() {
 
   const handleLogout = async () => {
     if (token) {
-      await logout({token});
+      await logout({ token });
       localStorage.removeItem("userInfo");
     }
-    navigate("/login")
-  }
+    navigate("/login");
+  };
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    document.querySelector(".btn-close")?.click();
+  };
+  
 
   return (
     <header className="navbar navbar-expand-lg bg-white fixed-top border-bottom shadow-sm">
-      <div className="container-fluid px-4">
-        {/* Logo */}
+      <div className="container-fluid px-4 d-flex justify-content-between align-items-center">
+        {/* LOGO */}
         <Link
           to="/"
           className="navbar-brand d-flex align-items-center fw-bold"
@@ -32,38 +38,46 @@ export default function Header() {
           Event Pora
         </Link>
 
-        {/* Navbar content */}
-        <div
-          className="collapse navbar-collapse justify-content-end"
-          id="navbarContent"
+        {/* Burger (Mobile) */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#mobileSidebar"
+          aria-controls="mobileSidebar"
         >
-          <ul className="navbar-nav align-items-center mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link to="/" className="nav-link nav-link-custom">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/about" className="nav-link nav-link-custom">
-                About
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/service" className="nav-link nav-link-custom">
-                Service & Package
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/contact" className="nav-link nav-link-custom">
-                Contact
-              </Link>
-            </li>
-          </ul>
+          <span className="navbar-toggler-icon"></span>
+        </button>
+      </div>
 
-          {/* Register & Login */}
-          {token && userInfo ? (
-            <>
-              <Link
+      {/* Desktop Navbar */}
+      <div className="container-fluid px-4 d-none d-lg-flex justify-content-end align-items-center">
+        <ul className="navbar-nav align-items-center mb-2 mb-lg-0">
+          <li className="nav-item">
+            <Link to="/" className="nav-link nav-link-custom">
+              Home
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/about" className="nav-link nav-link-custom">
+              About
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/service" className="nav-link nav-link-custom">
+              Service & Package
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/contact" className="nav-link nav-link-custom">
+              Contact
+            </Link>
+          </li>
+        </ul>
+
+        {token && userInfo ? (
+          <>
+            <Link
               to="/dashboard"
               className="btn"
               style={{
@@ -72,18 +86,17 @@ export default function Header() {
                 marginRight: "10px",
                 marginLeft: "10px",
               }}
-              >
-                {userInfo.name}
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="btn btn-danger fw-semibold px-4"
-              >
-                Logout
-              </button>
-            </>
-          ):(
-
+            >
+              {userInfo.name}
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="btn btn-danger fw-semibold px-4"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
           <>
             <Link
               to="/login"
@@ -109,7 +122,104 @@ export default function Header() {
               Register
             </Link>
           </>
-          )}
+        )}
+      </div>
+
+      {/* Mobile Sidebar */}
+      <div
+        className="offcanvas offcanvas-end d-lg-none"
+        tabIndex="-1"
+        id="mobileSidebar"
+        aria-labelledby="mobileSidebarLabel"
+      >
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title" id="mobileSidebarLabel">
+            Menu
+          </h5>
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div className="offcanvas-body">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <button
+                className="nav-link btn text-start"
+                onClick={() => handleNavigate("/")}
+              >
+                Home
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className="nav-link btn text-start"
+                onClick={() => handleNavigate("/about")}
+              >
+                About
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className="nav-link btn text-start"
+                onClick={() => handleNavigate("/service")}
+              >
+                Service & Package
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className="nav-link btn text-start"
+                onClick={() => handleNavigate("/contact")}
+              >
+                Contact
+              </button>
+            </li>
+
+            {token && userInfo ? (
+              <li className="nav-item mt-3">
+                <button
+                  className="btn w-100 mb-2"
+                  style={{ backgroundColor: "#014AB0", color: "#fff" }}
+                  onClick={() => handleNavigate("/dashboard")}
+                >
+                  {userInfo.name}
+                </button>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    document.querySelector(".btn-close")?.click();
+                  }}
+                  className="btn btn-danger fw-semibold w-100"
+                >
+                  Logout
+                </button>
+              </li>
+            ) : (
+              <li className="nav-item mt-3">
+                <button
+                  className="btn w-100 mb-2"
+                  style={{ backgroundColor: "#014AB0", color: "#fff" }}
+                  onClick={() => handleNavigate("/login")}
+                >
+                  Login
+                </button>
+                <button
+                  className="btn w-100"
+                  style={{
+                    border: "2px solid #014AB0",
+                    color: "#014AB0",
+                    backgroundColor: "transparent",
+                  }}
+                  onClick={() => handleNavigate("/register")}
+                >
+                  Register
+                </button>
+              </li>
+            )}
+          </ul>
         </div>
       </div>
     </header>
