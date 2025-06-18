@@ -1,7 +1,10 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "../../styles/Transaction.css";
-import { createTransactions, getTransactions,  } from "../../_services/transaction";
+import {
+  createTransactions,
+  getTransactions,
+} from "../../_services/transaction";
 import { packagesImage } from "../../_api";
 import { createConfirmations } from "../../_services/confirmation";
 
@@ -34,7 +37,7 @@ export default function Transaction() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const userId = userInfo?.id;
-  
+
   useEffect(() => {
     if (selectedPackageFromState) {
       setSelectedPackage(selectedPackageFromState);
@@ -60,7 +63,7 @@ export default function Transaction() {
       }
     }
   }, [paymentStep]);
-  
+
   useEffect(() => {
     const fetchLatestTransactionId = async () => {
       try {
@@ -122,24 +125,20 @@ export default function Transaction() {
       payload.append("status", "Waiting verification");
       payload.append("image", paymentProof);
 
-      console.log("📤 Kirim bukti pembayaran dengan data:");
-      for (let [key, value] of payload.entries()) {
-        console.log(`${key}:`, value);
-      }
-
       await createConfirmations(payload);
 
+      localStorage.removeItem("transaction_id");
       showNotification("✅ Bukti pembayaran berhasil dikirim!", "success");
       setPaymentStep("done");
-      navigate("/")
+      navigate("/");
     } catch (err) {
       console.error("❌ Gagal upload bukti pembayaran:", err);
       showNotification("Terjadi kesalahan saat upload.", "error");
     } finally {
       setIsSubmitting(false);
     }
-  };  
-  
+  };
+
   const showNotification = (message, type) => {
     console.log(`📢 Notification: ${message}`);
 
@@ -178,7 +177,6 @@ export default function Transaction() {
     setIsSubmitting(true);
 
     try {
-      // Ambil id terbaru
       const response = await getTransactions();
       const transactions = response?.data || [];
       const maxId = transactions.reduce(
@@ -187,7 +185,6 @@ export default function Transaction() {
       );
       const nextId = maxId + 1;
       localStorage.setItem("transaction_id", nextId);
-      console.log("💾 Transaction ID disimpan:", nextId);
 
       const payload = new FormData();
       payload.append("user_id", userId);
@@ -211,7 +208,7 @@ export default function Transaction() {
       setIsSubmitting(false);
     }
   };
-  
+
   const adminFee = 50000;
   const totalPrice = selectedPackage.price + adminFee;
 

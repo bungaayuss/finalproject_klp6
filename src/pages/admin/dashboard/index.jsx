@@ -24,12 +24,10 @@ export default function Dashboard() {
   const [transaction, setTransaction] = useState([]);
   const [, setUser] = useState([]);
   const [topPackages, setTopPackages] = useState([]);
-  const [sortOrder, setSortOrder] = useState("newest");
+  const [sortOrder, setSortOrder] = useState("oldest");
 
   const sortedTransactions = [...transaction].sort((a, b) => {
-    const dateA = new Date(a.transaction_date);
-    const dateB = new Date(b.transaction_date);
-    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    return sortOrder === "oldest" ? a.id - b.id : b.id - a.id;
   });
 
   const displayedTransactions = sortedTransactions.slice(0, 7);
@@ -164,7 +162,6 @@ export default function Dashboard() {
   }, []);
 
   const handleDetail = (event) => {
-    alert(`Detail event: ${event.event_name}`);
     setSelectedTransaksi(event);
     setShowModal(true);
   };
