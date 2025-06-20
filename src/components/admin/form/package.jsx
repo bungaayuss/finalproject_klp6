@@ -41,10 +41,10 @@ export default function FormTambahPackageEvent({
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
+    if (name === "foto") {
       setFormData({
         ...formData,
-        image: files[0],
+        foto: files[0],
       });
     } else {
       setFormData({
