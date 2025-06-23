@@ -3,10 +3,13 @@ import "../../../styles/Profile.css";
 import { showUsers, updateUsers } from "../../../_services/user";
 
 export default function Profile() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
     telepon: "",
+    password: "",
     createdAt: "",
   });
 
@@ -42,9 +45,11 @@ export default function Profile() {
   const handleSave = async () => {
     try {
       await updateUsers(userId, {
+        _method: "PUT",
         name: formData.nama,
         email: formData.email,
         phone: formData.telepon,
+        password: formData.password,
       });
       alert("Profil berhasil diperbarui!");
     } catch (error) {
@@ -88,16 +93,38 @@ export default function Profile() {
               />
             </div>
 
-            <div className="profil-form-group">
-              <label className="profil-label">Email</label>
-              <input
-                type="email"
-                className="profil-input"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Masukkan email aktif"
-              />
+            <div className="profil-form-row">
+              <div
+                className="profil-form-group"
+                style={{ flex: 1, marginRight: "10px" }}
+              >
+                <label className="profil-label">Email</label>
+                <input
+                  type="email"
+                  className="profil-input"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Masukkan email aktif"
+                />
+              </div>
+
+              <div
+                className="profil-form-group"
+                style={{ flex: 1, position: "relative" }}
+              >
+                <label className="profil-label">Password</label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="profil-input"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Masukkan password baru"
+                  onMouseEnter={() => setShowPassword(true)}
+                  onMouseLeave={() => setShowPassword(false)}
+                />
+              </div>
             </div>
 
             <div className="profil-form-group">
