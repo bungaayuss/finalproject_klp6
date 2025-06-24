@@ -84,19 +84,31 @@ export default function Dashboard() {
 
         console.log("transactions this week", trasactionThisWeek);
 
-        const totalTransactionThisWeek = trasactionThisWeek.length || 1;
         const EventInThisWeek = trasactionThisWeek.filter(
           (trx) => trx.status === "Paid"
         ).length;
+
         const pendingTransaction = trasactionThisWeek.filter(
           (trx) => trx.status === "Waiting verification"
         ).length;
 
+        const totalPaid = transactionData.filter(
+          (trx) => trx.status === "Paid"
+        ).length;
+
+        const totalPending = transactionData.filter(
+          (trx) => trx.status === "Waiting verification"
+        ).length;
+
         const eventPercentage =
-          ((EventInThisWeek / totalTransactionThisWeek) * 100).toFixed(1) + "%";
+          totalPaid > 0
+            ? ((EventInThisWeek / totalPaid) * 100).toFixed(1) + "%"
+            : "0.0%";
+
         const pendingPercentage =
-          ((pendingTransaction / totalTransactionThisWeek) * 100).toFixed(1) +
-          "%";
+          totalPending > 0
+            ? ((pendingTransaction / totalPending) * 100).toFixed(1) + "%"
+            : "0.0%";
 
         setStatistik({
           totalEvent: transactionData.filter((trx) => trx.status === "Paid")
